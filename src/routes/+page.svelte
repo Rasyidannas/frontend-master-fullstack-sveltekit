@@ -1,15 +1,28 @@
 <script>
+  import { error } from "@sveltejs/kit";
+
 	export let data;
+    export let form; //this for can access the returned value from form submission
 </script>
 
 <div class="centered">
 	<h1>todos</h1>
 
+    {#if form?.error}
+        <p class="error">{form.error}</p>
+    {/if}
+
     <!-- action="?/create" will call function create in action at +page.server.js -->
     <form method="POST" action="?/create">
         <label>
             add a todo:
-            <input name="description" placeholder="e.g. buy milk" autocomplete="off"/>
+            <input 
+            name="description" 
+            value={form?.description ?? ''}
+            placeholder="e.g. buy milk" 
+            autocomplete="off" 
+            required
+            />
         </label>
     </form>
 
