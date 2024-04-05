@@ -1,11 +1,21 @@
-export function load({ cookies }) {
-  const visited = cookies.get("visited");
+import * as db from "$lib/server/database.js";
 
-  cookies.set("visited", "true", {
-    path: "/",
-  });
+export function load({ cookies }) {
+  let id = cookies.get("userid");
+
+  if (!id) {
+    id = crypto.randomUUID();
+    cookies.set("userid", id, { path: "/" });
+  }
 
   return {
-    visited,
+    todos: db.getTodos(id),
   };
 }
+
+export const actions = {
+  default: async ({ cookies, request }) => {
+    const data = await request.formData();
+    db.createTodo(cookies.get("userid"), data.get("description"));
+  },
+};
