@@ -5,7 +5,8 @@
 <div class="centered">
 	<h1>todos</h1>
 
-    <form method="POST">
+    <!-- action="?/create" will call function create in action at +page.server.js -->
+    <form method="POST" action="?/create">
         <label>
             add a todo:
             <input name="description" placeholder="e.g. buy milk" autocomplete="off"/>
@@ -14,8 +15,12 @@
 
 	<ul class="todos">
 		{#each data.todos as todo (todo.id)}
-			<li>
-				{todo.description}
+        <li>
+            <form method="POST" action="?/delete">
+                    <input type="hidden" name="id" value="{todo.id}"/>
+                    <span>{todo.description}</span>
+                    <button aria-label="Mark as complete" />
+                </form>
 			</li>
 		{/each}
 	</ul>
