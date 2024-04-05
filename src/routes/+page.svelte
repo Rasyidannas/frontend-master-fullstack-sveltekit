@@ -1,2 +1,6 @@
-<h1>Welcome to SvelteKit</h1>
-<p>This is the home page</p>
+<script>
+    //this will get data from load function in +page.server.js
+    export let data;
+</script>
+
+<h1>Hello {data.visited ? 'friend' : 'stranger'}!</h1>
