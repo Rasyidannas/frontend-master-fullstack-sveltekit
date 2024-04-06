@@ -1,108 +1,15 @@
 <script>
-    import {fly, slide} from 'svelte/transition';
-    import {enhance} from '$app/forms';//this will avoid refreshing the page when submitting the form
+	/** @type {number} */
+	let number;
 
-	export let data;
-    export let form; //this for can access the returned value from form submission
-
-    let creating = false;
-    let deleting = [];
+	async function roll() {
+		const response = await fetch('/roll');
+		number = await response.json();
+	}
 </script>
 
-<div class="centered">
-	<h1>todos</h1>
+<button on:click={roll}>Roll the dice</button>
 
-    {#if form?.error}
-        <p class="error">{form.error}</p>
-    {/if}
-
-    <!-- action="?/create" will call function create in action at +page.server.js -->
-    <form 
-        method="POST" 
-        action="?/create" 
-        use:enhance={() => {
-            creating = true
-            
-            return async({update}) => {
-                await update();
-                creating = false;
-            }
-        }}
-        >
-        <label>
-            add a todo:
-            <input
-            disabled={creating} 
-            name="description" 
-            value={form?.description ?? ''}
-            placeholder="e.g. buy milk" 
-            autocomplete="off" 
-            required
-            />
-        </label>
-    </form>
-
-	<ul class="todos">
-		{#each data.todos.filter((todo) => !deleting.includes(todo.id)) as todo (todo.id)}
-        <li in:fly={{ y:20 }} out:slide>
-            <form 
-                method="POST" 
-                action="?/delete" 
-                use:enhance = {() => {
-                    deleting = [...deleting, todo.id];
-                    return async({update}) => {
-                        await update();
-                        deleting = deleting.filter((id) => id !== todo.id);
-                    }
-                }}
-            >
-                    <input type="hidden" name="id" value="{todo.id}"/>
-                    <span>{todo.description}</span>
-                    <button aria-label="Mark as complete" />
-                </form>
-			</li>
-		{/each}
-	</ul>
-
-    {#if creating}
-        <span class="saving">saving...</span>
-    {/if}
-</div>
-
-<style>
-	.centered {
-		max-width: 20em;
-		margin: 0 auto;
-	}
-
-	label {
-		width: 100%;
-	}
-
-	input {
-		flex: 1;
-	}
-
-	span {
-		flex: 1;
-	}
-
-	button {
-		border: none;
-		background: url(./remove.svg) no-repeat 50% 50%;
-		background-size: 1rem 1rem;
-		cursor: pointer;
-		height: 100%;
-		aspect-ratio: 1;
-		opacity: 0.5;
-		transition: opacity 0.2s;
-	}
-
-	button:hover {
-		opacity: 1;
-	}
-
-	.saving {
-		opacity: 0.5;
-	}
-</style>
+{#if number !== undefined}
+	<p>You rolled a {number}</p>
+{/if}
