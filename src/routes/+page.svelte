@@ -1,1 +1,1 @@
-<h1>home</h1>
+<h1>{window.innerWidth}x{window.innerHeight}</h1>
