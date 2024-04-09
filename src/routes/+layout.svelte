@@ -1,28 +1,25 @@
 <script>
-	import { navigating } from '$app/stores';
+	import { onMount } from 'svelte';
 
-	let previous;
-	let start;
-	let end;
+	let seconds = 0;
 
-	$: if ($navigating) {
-		start = Date.now();
-		end = null;
-		previous = $navigating;
-	} else {
-		end = Date.now();
-	}
+	onMount(() => {
+		const interval = setInterval(() => {
+			seconds += 1;
+		}, 1000);
+
+		return () => {
+			clearInterval(interval);
+		};
+	});
 </script>
 
-<nav>
+<!-- data-sveltekit-reload will make this page reload when go another route -->
+<nav data-sveltekit-reload>
 	<a href="/">home</a>
-    <!-- preloading is for make data load quickly by event listener -->
-	<a href="/slow-a" data-sveltekit-preload-data="hover">slow-a</a>
-	<a href="/slow-b">slow-b</a>
+	<a href="/about">about</a>
 </nav>
 
 <slot />
 
-{#if previous && end}
-	<p>navigated from {previous.from.url.pathname} to {previous.to.url.pathname} in <strong>{end - start}ms</strong></p>
-{/if}
+<p>the page has been open for {seconds} seconds</p>
