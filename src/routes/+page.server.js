@@ -1,3 +1,3 @@
-//Client-side rendering (CSR) is what makes the page interactive — such as incrementing the counter when you click the button in this app — and enables SvelteKit to update the page upon navigation without a full-page reload.
+// Prerendering means generating HTML for a page once, at build time, rather than dynamically for each request.
 
-export const csr = false; //this will set CSR/SPA false and into SSR mode
+export const prerender = true; //this will set prerender mode and into a static site generator (SSG).
