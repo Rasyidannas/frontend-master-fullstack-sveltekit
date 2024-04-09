@@ -1,3 +1,3 @@
-//Server-side rendering (SSR) is the process of generating HTML on the server, and is what SvelteKit does by default. It's important for performance and resilience, and is very beneficial for search engine optimization (SEO) — while some search engines can index content that is rendered in the browser with JavaScript, it happens less frequently and reliably.
+//Client-side rendering (CSR) is what makes the page interactive — such as incrementing the counter when you click the button in this app — and enables SvelteKit to update the page upon navigation without a full-page reload.
 
-export const ssr = false; //this will set SSR and into SPA mode
+export const csr = false; //this will set CSR/SPA false and into SSR mode
