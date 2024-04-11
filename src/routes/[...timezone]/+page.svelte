@@ -1,12 +1,12 @@
 <script>
 	import { onMount } from 'svelte';
-	import { invalidate } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	
 	export let data;
 
 	onMount(() => {
 		const interval = setInterval(() => {
-			invalidate("data:now");//this will invalidation/cancel fetch API, then run this API in +layout.js
+			invalidateAll();//this will invalidation/cancel fetch API, then run this API in +layout.js
 		}, 1000)
 
 		return () => {

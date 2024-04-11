@@ -1,7 +1,4 @@
-export async function load({ depends }) {
-  // This is for register dependency
-  depends("data:now");
-
+export async function load() {
   return {
     now: Date.now(),
   };
