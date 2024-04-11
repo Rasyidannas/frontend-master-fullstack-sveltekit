@@ -6,7 +6,7 @@
 
 	onMount(() => {
 		const interval = setInterval(() => {
-			invalidate("/api/now");//this will invalidation/cancel fetch API, then run this API in +layout.js
+			invalidate("data:now");//this will invalidation/cancel fetch API, then run this API in +layout.js
 		}, 1000)
 
 		return () => {
