@@ -1,4 +1,4 @@
-export interface View {
+interface View {
 	title: string;
 	endpoint: string;
 }
@@ -14,6 +14,6 @@ export const views: Record<string, View> = {
 	},
 	upcoming: {
 		title: 'Upcoming',
-		endpoint: 'movie/upcoming'
+		endpoint: 'movie/now_playing'
 	}
 };

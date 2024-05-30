@@ -1,6 +1,5 @@
-// this is using +page.js than +server.js because no secret key is needed
-import * as api from '$lib/api.js';
-import type { MovieDetails, MovieList } from '$lib/type.js';
+import * as api from '$lib/api';
+import type { MovieDetails, MovieList } from '$lib/types.js';
 
 export async function load({ fetch }) {
 	const [trending, now_playing, upcoming] = await Promise.all([
@@ -9,14 +8,14 @@ export async function load({ fetch }) {
 		api.get(fetch, 'movie/upcoming') as Promise<MovieList>
 	]);
 
-	const featured = (await api.get(fetch, `movie/${trending.results[0].id}`, {
-		append_to_response: 'images'
+	const featured = (await api.get(fetch, `/movie/${trending.results[0].id}`, {
+		append_to_response: 'images,videos,recommendations'
 	})) as MovieDetails;
 
 	return {
-		trending,
-		now_playing,
-		upcoming,
+		trending: trending.results.slice(1),
+		now_playing: now_playing.results,
+		upcoming: upcoming.results,
 		featured
 	};
 }

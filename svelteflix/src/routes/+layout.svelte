@@ -1,64 +1,113 @@
 <script>
-	import '../styles.css';
-	// import logo from '$lib/images/logo.svg';
+	import { enhance } from '$app/forms';
+	import { page, navigating } from '$app/stores';
+	import NavigatingIndicator from '$lib/components/NavigatingIndicator.svelte';
+	import * as api from '$lib/api';
+	import logo from '$lib/images/logo.svg';
 	import tmdb from '$lib/images/tmdb.svg';
+	import '../styles.css';
+
+	export let data;
 </script>
 
+<svelte:head>
+	<link rel="preconnect" href={api.base} />
+	<title>{$page.data.title ?? 'SvelteFlix'}</title>
+	<meta name="description" content="Discover today's top movies" />
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta property="twitter:domain" content="frontend-masters-svelteflix.vercel.app" />
+	<meta property="twitter:url" content="https://frontend-masters-svelteflix.vercel.app/" />
+	<meta name="twitter:title" content="SvelteFlix" />
+	<meta name="twitter:description" content="Discover today's top movies" />
+	<meta name="twitter:image" content="https://frontend-masters-svelteflix.vercel.app/og.png" />
+</svelte:head>
+
 <nav>
-	<a href="/">
-		<!-- this is from static folder -->
-		<img src="/images/logo.svg" alt="SvelteFlix" />
-	</a>
+	<a class="logo" href="/"><img class="logo" alt="SvelteFlix" src={logo} /></a>
 
 	<div class="links">
 		<a href="/search">Search</a>
-		<a href="/watchlist">Watchlist</a>
-		<a href="/login">Log in</a>
+
+		{#if data.user}
+			<a href="/watchlist">Watchlist</a>
+
+			<form method="POST" action="/logout" use:enhance>
+				<button>Log out</button>
+			</form>
+		{:else}
+			<a href="/login">Log in or register</a>
+		{/if}
 	</div>
 </nav>
 
-<main>
+<main class:infinite={$page.data.infinite}>
 	<slot />
 </main>
 
 <footer>
 	<p>
-		Data provided by
-		<a href="https://www.themoviedb.org/">
-			<img src={tmdb} alt="The Movie DB" />
-		</a>
+		Data provided by <a href="https://www.themoviedb.org/"><img alt="The Movie DB" src={tmdb} /></a>
 	</p>
 </footer>
 
+{#if $navigating}
+	<NavigatingIndicator />
+{/if}
+
 <style>
+	nav,
+	footer {
+		padding: 1rem var(--side);
+		margin: 0 auto;
+	}
+
 	nav {
 		display: flex;
 		width: 100%;
 		height: 3rem;
 		align-items: center;
 		justify-content: space-between;
-		max-width: var(--column);
-		padding: 0 var(--side);
 		color: var(--accent);
-	}
-
-	a {
-		color: inherit;
-		text-decoration: none;
-	}
-
-	img {
-		height: 1rem;
-	}
-
-	.links {
-		display: flex;
-		gap: 1rem;
+		max-width: var(--column);
 	}
 
 	footer {
 		display: flex;
-		justify-content: center;
 		height: 5rem;
+		align-items: center;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	button {
+		background: none;
+		border: none;
+		font-family: inherit;
+		font-size: inherit;
+		color: inherit;
+		cursor: pointer;
+	}
+
+	.links {
+		display: flex;
+		align-items: center;
+	}
+
+	main.infinite {
+		height: 0;
+		flex: 1;
+		overflow: hidden;
+	}
+
+	.links {
+		display: flex;
+		gap: 1em;
+	}
+
+	.logo {
+		height: 100%;
 	}
 </style>
